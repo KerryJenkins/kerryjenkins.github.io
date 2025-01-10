@@ -87,8 +87,10 @@ function detect(source) {
                         delete s.cacheCount
                     })
                 }
-
-                el.result.innerText = JSON.stringify(symbols, null, 2)
+                var jsonSymbols = JSON.stringify(symbols, null, 2);
+                if (jsonSymbols.length > 2) {
+                    el.result.innerText = JSON.stringify(symbols, null, 2);
+                }
 
                 el.waitingTime.innerText = formatNumber(afterFunctionCalled - afterPreviousCallFinished)
                 el.drawImageTime.innerText = formatNumber(afterDrawImage - afterFunctionCalled)

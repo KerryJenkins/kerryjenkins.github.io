@@ -61,8 +61,6 @@ function detect(source) {
             imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height),
             afterGetImageData = performance.now();
 
-        //const config = {sym: "ZBAR_CODE128", conf: "ZBAR_CFG_ENABLE", value: "1"};
-
         return zbarWasm
             .scanImageData(imageData)
             .then(symbols => {
@@ -90,18 +88,13 @@ function detect(source) {
                     })
                 }
 
-                var jsonResult = JSON.stringify(symbols, null, 2);
-                if (jsonResult != "{}") {
-                    el.result.innerText = jsonResult;
-                }
+                el.result.innerText = JSON.stringify(symbols, null, 2)
 
-                //console.log(symbols, null, 2);
-
-                // el.waitingTime.innerText = formatNumber(afterFunctionCalled - afterPreviousCallFinished)
-                // el.drawImageTime.innerText = formatNumber(afterDrawImage - afterFunctionCalled)
-                // el.getImageDataTime.innerText = formatNumber(afterGetImageData - afterDrawImage)
-                // el.scanImageDataTime.innerText = formatNumber(afterScanImageData - afterGetImageData)
-                // el.timing.className = 'visible'
+                el.waitingTime.innerText = formatNumber(afterFunctionCalled - afterPreviousCallFinished)
+                el.drawImageTime.innerText = formatNumber(afterDrawImage - afterFunctionCalled)
+                el.getImageDataTime.innerText = formatNumber(afterGetImageData - afterDrawImage)
+                el.scanImageDataTime.innerText = formatNumber(afterScanImageData - afterGetImageData)
+                el.timing.className = 'visible'
 
                 afterPreviousCallFinished = performance.now()
             })

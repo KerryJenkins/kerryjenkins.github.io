@@ -61,10 +61,9 @@ function detect(source) {
             imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height),
             afterGetImageData = performance.now();
 
-        const config = {sym: "ZBAR_CODE128", conf: "ZBAR_CFG_ENABLE", value: "1"};
+        //const config = {sym: "ZBAR_CODE128", conf: "ZBAR_CFG_ENABLE", value: "1"};
 
         return zbarWasm
-            .setconfig(config)
             .scanImageData(imageData)
             .then(symbols => {
                 const afterScanImageData = performance.now()

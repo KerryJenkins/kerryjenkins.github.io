@@ -89,7 +89,7 @@ function detect(source) {
                 // }
                 var jsonSymbols = JSON.stringify(symbols, null, 2);
                 if (jsonSymbols.length > 2) {
-                    el.result.innerText = JSON.stringify(symbols, null, 2);
+                    el.result.innerText = symbols[0].rawValue; //JSON.stringify(symbols, null, 2);
                 }
 
                 // el.waitingTime.innerText = formatNumber(afterFunctionCalled - afterPreviousCallFinished)

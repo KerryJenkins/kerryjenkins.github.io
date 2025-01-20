@@ -11,7 +11,7 @@ let
     afterPreviousCallFinished,
     requestId = null;
 
-el.usingOffscreenCanvas.innerText = usingOffscreenCanvas ? 'yes' : 'no'
+//el.usingOffscreenCanvas.innerText = usingOffscreenCanvas ? 'yes' : 'no'
 
 
 function isOffscreenCanvasWorking() {
@@ -103,7 +103,7 @@ function detect(source) {
 
     } else {
         el.result.innerText = 'Source not ready'
-        el.timing.className = ''
+        //el.timing.className = ''
 
         return Promise.resolve()
     }
@@ -176,7 +176,7 @@ el.videoBtn.addEventListener('click', event => {
             })
             .catch(error => {
                 el.result.innerText = JSON.stringify(error)
-                el.timing.className = ''
+                //el.timing.className = ''
             })
 
     } else {

@@ -17,46 +17,17 @@
 <body>
 <div class="container">
 
-  <!-- <input id="fileInput" type="file" style="display: none;" accept="image/*">
-
-  <input id="imgUrl" type="url" placeholder="Paste an image URL then click outside" required> 
-  <button id="imgBtn">Image file</button> -->
-  <button id="videoBtn">Camera</button>
-
-  <!-- <select id="encoding">
-    <option value="utf-8" selected>UTF-8</option>
-    <option value="iso-8859-15">ISO-8859-15</option>
-    <option value="windows-1252">Windows-1252</option>
-    <option value="macintosh">Macintosh</option>
-  </select>
- -->
-  <!-- <label>
-    <input id="details" type="checkbox">
-    <span class="label-body">Show details</span>
-  </label> -->
+  <button id="videoBtn">Scan</button>
 
   <div class="viewport">
     <canvas id="canvas"></canvas>
-    <!-- <img id="img" crossorigin="anonymous"> -->
     <video id="video" muted autoplay playsinline></video>
   </div>
 
   <h5>Result</h5>
   <pre id="result" ></pre>
 
-  <!-- <div class="row"> -->
- 
-    <!-- <div class="six columns">
-      <div id="timing"> -->
-        <!-- Using <code>OffscreenCanvas</code> for image transfer: <span id="usingOffscreenCanvas"></span><br> -->
-        <!-- Time since previous scan: <span id="waitingTime"></span> ms<br>
-        <code>drawImage()</code>: <span id="drawImageTime"></span> ms<br>
-        <code>getImageData()</code>: <span id="getImageDataTime"></span> ms<br>
-        <code>scanImageData()</code>: <span id="scanImageDataTime"></span> ms -->
-      <!-- </div>
-    </div>
-  </div>
-</div> -->
+</div> 
 
 <script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.11.0/dist/index.js"></script>
 <script src="js/main.js"></script>

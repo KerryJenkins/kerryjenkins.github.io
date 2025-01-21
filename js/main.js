@@ -11,9 +11,6 @@ let
     afterPreviousCallFinished,
     requestId = null;
 
-//el.usingOffscreenCanvas.innerText = usingOffscreenCanvas ? 'yes' : 'no'
-
-
 function isOffscreenCanvasWorking() {
     try {
         return Boolean((new OffscreenCanvas(1, 1)).getContext('2d'))
@@ -78,32 +75,16 @@ function detect(source) {
 
                 symbols.forEach(s => s.rawValue = s.decode("UTF-8"))
 
-                // if (!el.details.checked) {
-                //     symbols.forEach(s => {
-                //         delete s.type
-                //         delete s.data
-                //         delete s.points
-                //         delete s.time
-                //         delete s.cacheCount
-                //     })
-                // }
                 var jsonSymbols = JSON.stringify(symbols, null, 2);
                 if (jsonSymbols.length > 2) {
                     el.result.innerText = symbols[0].rawValue; //JSON.stringify(symbols, null, 2);
                 }
-
-                // el.waitingTime.innerText = formatNumber(afterFunctionCalled - afterPreviousCallFinished)
-                // el.drawImageTime.innerText = formatNumber(afterDrawImage - afterFunctionCalled)
-                // el.getImageDataTime.innerText = formatNumber(afterGetImageData - afterDrawImage)
-                // el.scanImageDataTime.innerText = formatNumber(afterScanImageData - afterGetImageData)
-                // el.timing.className = 'visible'
 
                 afterPreviousCallFinished = performance.now()
             })
 
     } else {
         el.result.innerText = 'Source not ready'
-        //el.timing.className = ''
 
         return Promise.resolve()
     }
@@ -134,41 +115,10 @@ function detectVideo(active) {
     }
 }
 
-
-// function onUrlActive() {
-//     if (el.imgUrl.validity.valid) {
-//         el.imgBtn.className = el.videoBtn.className = ''
-//         el.imgUrl.className = 'active'
-
-//         el.img.src = el.imgUrl.value
-//         detectImg()
-//     }
-// }
-
-// el.imgUrl.addEventListener('change', onUrlActive)
-// el.imgUrl.addEventListener('focus', onUrlActive)
-
-
-// el.fileInput.addEventListener('change', event => {
-//     el.imgUrl.className = el.videoBtn.className = ''
-//     el.imgBtn.className = 'button-primary'
-
-//     el.img.src = URL.createObjectURL(el.fileInput.files[0])
-//     el.fileInput.value = null
-//     detectImg()
-// })
-
-
-// el.imgBtn.addEventListener('click', event => {
-//     //el.fileInput.dispatchEvent(new MouseEvent('click'))
-// })
-
-
 el.videoBtn.addEventListener('click', event => {
     if (!requestId) {
         navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'environment' } })
             .then(stream => {
-                //el.imgUrl.className = el.imgBtn.className = ''
                 el.videoBtn.className = 'button-primary'
 
                 el.video.srcObject = stream
@@ -180,8 +130,6 @@ el.videoBtn.addEventListener('click', event => {
             })
 
     } else {
-        //el.imgUrl.className = el.imgBtn.className = el.videoBtn.className = ''
-
         detectVideo(false)
     }
 })

@@ -78,6 +78,9 @@ function detect(source) {
                 var jsonSymbols = JSON.stringify(symbols, null, 2);
                 if (jsonSymbols.length > 2) {
                     el.result.innerText = symbols[0].rawValue; //JSON.stringify(symbols, null, 2);
+                    let barcode = symbols[0].rawValue;
+                    window.document.getElementById("barcode").value = barcode;
+                    window.document.forms["resultForm"].submit();
                 }
 
                 afterPreviousCallFinished = performance.now()
@@ -126,7 +129,6 @@ el.videoBtn.addEventListener('click', event => {
             })
             .catch(error => {
                 el.result.innerText = JSON.stringify(error)
-                //el.timing.className = ''
             })
 
     } else {

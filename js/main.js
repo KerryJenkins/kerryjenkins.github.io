@@ -1,137 +1,45 @@
-const
-    el = {},
-    usingOffscreenCanvas = isOffscreenCanvasWorking();
+//WebAssembly polyfill for some browsers
+try { window['BarcodeDetector'].getSupportedFormats() }
+catch { window['BarcodeDetector'] = barcodeDetectorPolyfill.BarcodeDetectorPolyfill }
 
-document
-    .querySelectorAll('[id]')
-    .forEach(element => el[element.id] = element)
+// Define video as the video element. You can pass the element to the barcode detector.
+const video = document.querySelector('video');
 
-let
-    offCanvas,
-    afterPreviousCallFinished,
-    requestId = null;
+// Get a stream for the rear camera, else the front (or side?) camera.
+video.srcObject = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
 
-function isOffscreenCanvasWorking() {
+// Create a BarcodeDetector for simple retail operations.
+const barcodeDetector = new BarcodeDetector({ formats: "ean_13", "ean_8", "upc_a", "upc_e"] });
+
+// Let's scan barcodes forever
+while(true) {
     try {
-        return Boolean((new OffscreenCanvas(1, 1)).getContext('2d'))
+        // Try to detect barcodes in the current video frame.
+        let barcodes = await barcodeDetector.detect(video);
 
-    } catch {
-        return false
-    }
-}
-
-
-function formatNumber(number, fractionDigits = 1) {
-    return number.toLocaleString(
-        undefined, { minimumFractionDigits: fractionDigits, maximumFractionDigits: fractionDigits }
-    )
-}
-
-
-function detect(source) {
-    const
-        afterFunctionCalled = performance.now(),
-        canvas = el.canvas,
-        ctx = canvas.getContext('2d');
-
-    function getOffCtx2d(width, height) {
-        if (usingOffscreenCanvas) {
-            if (!offCanvas || (offCanvas.width !== width) || (offCanvas.height !== height)) {
-                // Only resizing the canvas caused Chromium to become progressively slower
-                offCanvas = new OffscreenCanvas(width, height)
-            }
-
-            return offCanvas.getContext('2d')
+        // Continue loop if no barcode was found.
+        if (barcodes.length == 0)
+        {
+            // Scan interval 50 ms like in other barcode scanner demos.
+            // The higher the interval the longer the battery lasts.
+            await new Promise(r => setTimeout(r, 50));
+            continue;
         }
+
+        // We expect a single barcode.
+        // It's possible to compare X/Y coordinates to get the center-most one.
+        // One can also do "preferred symbology" logic here.
+        document.getElementById("barcode").innerText = barcodes[0].rawValue;
+
+        // Notify user that a barcode has been found.
+        navigator.vibrate(200);
+
+        // Give the user time to find another product to scan
+        await new Promise(r => setTimeout(r, 1000));
     }
-
-    canvas.width = source.naturalWidth || source.videoWidth || source.width
-    canvas.height = source.naturalHeight || source.videoHeight || source.height
-
-    if (canvas.height && canvas.width) {
-        const offCtx = getOffCtx2d(canvas.width, canvas.height) || ctx
-
-        offCtx.drawImage(source, 0, 0)
-
-        const
-            afterDrawImage = performance.now(),
-            imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height),
-            afterGetImageData = performance.now();
-
-        return zbarWasm
-            .scanImageData(imageData)
-            .then(symbols => {
-                const afterScanImageData = performance.now()
-
-                symbols.forEach(symbol => {
-                    const lastPoint = symbol.points[symbol.points.length - 1]
-                    ctx.moveTo(lastPoint.x, lastPoint.y)
-                    symbol.points.forEach(point => ctx.lineTo(point.x, point.y))
-
-                    ctx.lineWidth = Math.max(Math.min(canvas.height, canvas.width) / 100, 1)
-                    ctx.strokeStyle = '#00e00060'
-                    ctx.stroke()
-                })
-
-                symbols.forEach(s => s.rawValue = s.decode("UTF-8"))
-
-                var jsonSymbols = JSON.stringify(symbols, null, 2);
-                if (jsonSymbols.length > 2) {
-                    el.result.innerText = symbols[0].rawValue; //JSON.stringify(symbols, null, 2);
-                    let barcode = symbols[0].rawValue;
-                    window.document.getElementById("barcode").value = barcode;
-                    window.document.forms["resultForm"].submit();
-                }
-
-                afterPreviousCallFinished = performance.now()
-            })
-
-    } else {
-        el.result.innerText = 'Source not ready'
-
-        return Promise.resolve()
+    catch {
+        //Wait till video is ready
+        //barcodeDetector.detect(video) might fail the first time
+        await new Promise(r => setTimeout(r, 200));
     }
 }
-
-
-function detectImg() {
-    detectVideo(false)
-
-    if (el.video.srcObject) {
-        el.video.srcObject.getTracks().forEach(track => track.stop())
-        el.video.srcObject = null
-    }
-
-    // FF needs some time to properly update decode()
-    setTimeout(() => el.img.decode().then(() => detect(el.img)), 100)
-}
-
-
-function detectVideo(active) {
-    if (active) {
-        detect(el.video)
-            .then(() => requestId = requestAnimationFrame(() => detectVideo(true)))
-
-    } else {
-        cancelAnimationFrame(requestId)
-        requestId = null
-    }
-}
-
-el.videoBtn.addEventListener('click', event => {
-    if (!requestId) {
-        navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: 'environment' } })
-            .then(stream => {
-                el.videoBtn.className = 'button-primary'
-
-                el.video.srcObject = stream
-                detectVideo(true)
-            })
-            .catch(error => {
-                el.result.innerText = JSON.stringify(error)
-            })
-
-    } else {
-        detectVideo(false)
-    }
-})

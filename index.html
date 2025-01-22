@@ -7,33 +7,20 @@
 
   <title>zbar-wasm example</title>
 
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/main.css">
-
   <link rel="icon" type="image/png" href="img/favicon.png">
 </head>
 
 <body>
-<div class="container">
 
-  <button id="videoBtn">Scan</button>
+<!-- WebAssembly polyfill for some browsers -->
+<script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.9.15/dist/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.20/dist/index.js"></script>
 
-  <div class="viewport">
-    <canvas id="canvas"></canvas>
-    <video id="video" muted autoplay playsinline></video>
-  </div>
+<!-- Show the camera feed to help the user capture the barcode -->
+<video autoplay></video>
 
-  <h5>Result</h5>
-  <pre id="result" ></pre>
-
-  <form id="form" action="result.html" name="resultForm" id="resultForm" method="post">
-    <input type="hidden" id="barcode" name="barcode">
-  </form>
-</div> 
-
-<script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.11.0/dist/index.js"></script>
-<script src="js/main.js"></script>
+<!-- Let's simply display the barcode data and have "Waiting..." as placeholder. -->
+<p id="barcode">Waiting...</p>
 
 </body>
 </html>

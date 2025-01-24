@@ -1,26 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=0.9">
-
-  <title>zbar-wasm example</title>
-
-  <link rel="icon" type="image/png" href="img/favicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode Scanner</title>
 </head>
-
 <body>
+    <div id="interactive" class="viewport"></div>
+    <div id="result"></div>
 
-<!-- WebAssembly polyfill for some browsers -->
-<script src="https://cdn.jsdelivr.net/npm/@undecaf/zbar-wasm@0.9.15/dist/index.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@undecaf/barcode-detector-polyfill@0.9.20/dist/index.js"></script>
-
-<!-- Show the camera feed to help the user capture the barcode -->
-<video autoplay></video>
-
-<!-- Let's simply display the barcode data and have "Waiting..." as placeholder. -->
-<p id="barcode">Waiting...</p>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>
